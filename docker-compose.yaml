@@ -1,0 +1,38 @@
+services:
+  frontend:
+    build: BlinkIt-Clone-Full-Stack-Ecommerce/client
+    ports:
+      - "5173:5173"
+    networks:
+      - mern
+  backend:
+    build: BlinkIt-Clone-Full-Stack-Ecommerce/server
+    ports:
+      - "5050:5050"
+    networks:
+      - mern
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    networks:
+      - mern
+    volumes:
+      - mongo-data:/data/db
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+
+
+networks:
+  mern:
+    driver: bridge
+
+volumes:
+    mongo-data:
+      driver: local
