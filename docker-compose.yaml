@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    build: BlinkIt-Clone-Full-Stack-Ecommerce/client
+    build: ./client
     ports:
       - "5173:5173"
     networks:
@@ -13,7 +13,7 @@ services:
       - backend
 
   backend:
-    build: BlinkIt-Clone-Full-Stack-Ecommerce/server
+    build: ./server
     ports:
       - "5050:5050"
     networks:
