@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   frontend:
     build: BlinkIt-Clone-Full-Stack-Ecommerce/client
@@ -5,6 +7,11 @@ services:
       - "5173:5173"
     networks:
       - mern
+    environment:
+      VITE_API_URL: "http://backend:5050" # Set the backend API URL for frontend usage
+    depends_on:
+      - backend
+
   backend:
     build: BlinkIt-Clone-Full-Stack-Ecommerce/server
     ports:
@@ -13,6 +20,11 @@ services:
       - mern
     depends_on:
       - mongo
+      - db
+    environment:
+      MONGO_URI: "mongodb://mongo:27017/mydb"  # MongoDB URI
+      POSTGRES_URI: "postgres://myuser:mypassword@db:5432/mydb"  # Postgres URI
+
   mongo:
     image: mongo:latest
     ports:
@@ -21,18 +33,26 @@ services:
       - mern
     volumes:
       - mongo-data:/data/db
+
   db:
     image: postgres
     environment:
       POSTGRES_DB: mydb
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
-
+    ports:
+      - "5432:5432"
+    networks:
+      - mern
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
 networks:
   mern:
     driver: bridge
 
 volumes:
-    mongo-data:
-      driver: local
+  mongo-data:
+    driver: local
+  postgres-data:
+    driver: local
